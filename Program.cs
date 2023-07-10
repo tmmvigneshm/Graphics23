@@ -7,7 +7,8 @@ class Program {
    [STAThread]
    static void Main () {
       // Create a LinesWin that demonstrates the Line Drawing
-      new LinesWin ().Show ();
+      //new LinesWin ().Show ();
+      new PolyFillWin ().Show ();
       new Application ().Run ();
    }
 
