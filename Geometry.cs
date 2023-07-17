@@ -23,6 +23,15 @@ readonly struct Complex {
 /// <summary>A point in 2D space, with double-precision coordinates (X, Y)</summary>
 readonly record struct Point2 (double X, double Y) {
    public (int X, int Y) Round () => ((int)(X + 0.5), (int)(Y + 0.5));
+
+   /// <summary>Returns a new point for a given point which is radially rotated.</summary>
+   public readonly Point2 RadialMove (double r, double theta) => new (X + r * Math.Cos (theta), Y + r * Math.Sin (theta));
+
+   /// <summary>Returns angle between two points.</summary>
+   public readonly double AngleTo (Point2 b) {
+      double dx = b.X - X, dy = b.Y - Y;
+      return Math.Atan2 (dy, dx);
+   }
 }
 
 /// <summary>A Line in 2 dimensions (A -> B)</summary>

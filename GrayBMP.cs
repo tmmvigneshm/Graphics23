@@ -126,6 +126,39 @@ class GrayBMP {
       End ();
    }
 
+   /// <summary>Draws a eight sided filled polygon for a given line. </summary>
+   public void DrawThickLine (int x0, int y0, int x1, int y1, int width, int color) {
+      var A = new Point2 (x0, y0);
+      var B = new Point2 (x1, y1);
+      mPolyFill.Reset ();
+      // Find the slope.
+      var alpha = A.AngleTo (B) - D2R (90);
+      List<Point2> hexPoints = new ();
+      width /= 2;
+      for (int i = 0; i < 2; i++) {
+         // In each iteration consider one point.
+         var (radius, pt) = i == 0 ? (-width, A) : (width, B);
+         var ang = alpha;
+         for (int j = 0; j < 4; j++) {
+            hexPoints.Add (pt.RadialMove (radius, ang));
+            ang += D2R (60); // Add 60 degree.
+         }
+      }
+
+      for (int i = 0; i < hexPoints.Count; i++) {
+         var (X1, Y1) = hexPoints[i].Round ();
+         var idx2 = hexPoints.Count - 1 == i ? 0 : i + 1;
+         var (X2, Y2) = hexPoints[idx2].Round ();
+         mPolyFill.AddLine (X1, Y1, X2, Y2);
+      }
+      mPolyFill.Fill (this, color);
+   }
+   PolyFillFast mPolyFill = new();
+
+
+   /// <summary>Converts degrees to radians</summary>
+   double D2R (double degrees) => degrees / 57.295779513082323;
+
    /// <summary>Call End after finishing the update of the bitmap</summary>
    public void End () {
       if (--mcLocks == 0) {
