@@ -30,7 +30,11 @@ readonly record struct Point2 (double X, double Y) {
    /// <summary>Returns angle between two points.</summary>
    public readonly double AngleTo (Point2 b) {
       double dx = b.X - X, dy = b.Y - Y;
-      return Math.Atan2 (dy, dx);
+      if (dx != 0 || dy != 0) {
+         var fAngle = Math.Atan2 (dy, dx);
+         return fAngle.EQ (-Math.PI) ? Math.PI : fAngle;
+      }
+      return 0;
    }
 }
 
@@ -43,4 +47,12 @@ class Drawing {
 
    public IReadOnlyList<Line> Lines => mLines;
    List<Line> mLines = new ();
+}
+
+/// <summary>Class Ext - Defines extension methods.</summary>
+public static class Ext {
+   /// <summary>Compares two doubles.</summary>
+   public static bool EQ (this double a, double b) => Math.Abs (a - b) < Epsilon;
+   /// <summary>The standard epsilon value</summary>
+   const double Epsilon = 1e-6;
 }
